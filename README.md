@@ -31,7 +31,9 @@
 
 
 BIOS
+
 |
+
 v
 bootloader (stage1)
 |
