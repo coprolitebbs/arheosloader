@@ -30,31 +30,7 @@
 Схема загрузки:
 
 
-BIOS
-|
-v
-bootloader (stage1)
-|
-| загрузка stage2
-v
-stage2
-|
-+-- EXT2 driver
-|
-+-- Kernel loader
-|
-+-- VBE initialization
-|
-+-- A20 enable
-|
-+-- GDT setup
-|
-v
-Protected Mode
-|
-v
-kernel.bin
-
+BIOS -> bootloader (stage1) -> stage2 (драйвер EXT2 или FAT12, Загрузка ядра, Инициализация VBE, Включение A20, установка GDT, Защищенный режим, Передача управления ядру)
 
 ---
 
@@ -122,21 +98,6 @@ Archeosloader содержит собственный минимальный EXT
 - Чтение inode ядра
 - Direct blocks
 
-
-Пример структуры inode ядра:
-
-
-inode
-|
-+-- size
-|
-+-- direct block 0
-+-- direct block 1
-+-- direct block 2
-|
-...
-
-
 На текущем этапе используются только прямые блоки EXT2.
 
 В будущем планируется:
@@ -157,11 +118,6 @@ kernel.bin
 
 
 На данный момент загрузчик ожидает бинарный образ ядра:
-
-
-EXT2
-|
-+-- /kernel.bin
 
 
 Размер ядра определяется напрямую из inode EXT2:
@@ -241,13 +197,13 @@ Resolution
 
 Пример:
 
-bash
+```bash
 nasm boot.asm -o boot.bin
 
 nasm stage2.asm -o stage2.bin
 
 cat boot.bin stage2.bin > disk.img
-
+```
 
 Запуск
 
@@ -255,10 +211,14 @@ cat boot.bin stage2.bin > disk.img
 
 - Запуск с образа дискеты:
 
+```
 qemu-system-i386 -drive file=output/fat12_720.img,format=raw,if=floppy -vga std -display cocoa -debugcon stdio -global isa-debugcon.iobase=0xe9
+```
 
 - Запуск с образа hdd:
 
+```
 qemu-system-i386 -drive file=output/hdd_ext2.img,format=raw,if=ide -vga std -display cocoa -debugcon stdio -global isa-debugcon.iobase=0xe9
+```
 
 # arheosloader
